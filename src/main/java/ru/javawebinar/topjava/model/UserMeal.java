@@ -27,7 +27,7 @@ public class UserMeal {
         return description;
     }
 
-    public int getCalories() {
+    public int getCalories1() {
         return calories;
     }
 }
