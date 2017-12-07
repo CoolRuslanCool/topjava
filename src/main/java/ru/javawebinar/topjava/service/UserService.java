@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface UserService {
 
+    default User getWithMeals(int id) { return null; }
+
     User create(User user);
 
     void delete(int id) throws NotFoundException;

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
@@ -14,6 +16,9 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
 
     @Autowired
     private CrudUserRepository crudRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public User save(User user) {
@@ -38,5 +43,20 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAll() {
         return crudRepository.findAll(SORT_NAME_EMAIL);
+    }
+
+    @Override
+//    @Transactional
+    public User getWithMeals(int id) {
+        return crudRepository.findFirstWithMealsById(id);
+//        Map<String, Object> hints = new HashMap<>(1);
+//        hints.put("javax.persistence.loadgraph", entityManager.getEntityGraph("mealsGraph"));
+//        hints.put("javax.persistence.loadgraph", ("mealsGraph"));
+//        hints.put("javax.persistence.fetchgraph", entityManager.getEntityGraph("mealsGraph"));
+//        return entityManager.find(User.class, id, hints);
+        // fetch only meals
+//        User user = crudRepository.getOne(id);
+//        Hibernate.initialize(user.getMeals());
+//        return user;
     }
 }

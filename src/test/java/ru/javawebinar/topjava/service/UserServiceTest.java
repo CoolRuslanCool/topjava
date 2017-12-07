@@ -12,7 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.ActiveDbProfileResolver;
+import ru.javawebinar.topjava.TestStatsticLog;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -29,7 +31,7 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
-public class UserServiceTest {
+public class UserServiceTest extends TestStatsticLog {
 
     static {
         // Only for postgres driver logging
@@ -56,8 +58,9 @@ public class UserServiceTest {
         assertMatch(service.getAll(), ADMIN, newUser, USER);
     }
 
-    @Test(expected = DataAccessException.class)
+    @Test
     public void duplicateMailCreate() throws Exception {
+        thrown.expect(DataAccessException.class);
         service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.ROLE_USER));
     }
 
@@ -67,8 +70,9 @@ public class UserServiceTest {
         assertMatch(service.getAll(), ADMIN);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void notFoundDelete() throws Exception {
+        thrown.expect(NotFoundException.class);
         service.delete(1);
     }
 
@@ -78,8 +82,9 @@ public class UserServiceTest {
         assertMatch(user, USER);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotFound() throws Exception {
+        thrown.expect(NotFoundException.class);
         service.get(1);
     }
 
@@ -102,5 +107,12 @@ public class UserServiceTest {
     public void getAll() throws Exception {
         List<User> all = service.getAll();
         assertMatch(all, ADMIN, USER);
+    }
+
+    @Test
+    @Transactional
+    public void getWithMeals() throws Exception {
+        User withMeals = service.getWithMeals(100000);
+        withMeals.getMeals().forEach(System.out::println);
     }
 }

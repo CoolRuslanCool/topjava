@@ -13,6 +13,7 @@ public class Profiles {
             HSQL_DB = "hsqldb";
 
     public static final String ACTIVE_DB = HSQL_DB;
+
     //  Get DB profile depending of DB driver in classpath
     public static String getActiveDbProfile() {
         try {
@@ -27,4 +28,23 @@ public class Profiles {
             }
         }
     }
+
+//    public static String getActiveRepositoryProfile() {
+//        try {
+//            Class.forName("org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean");
+//            return DATAJPA;
+//        } catch (ClassNotFoundException e1) {
+//            try {
+//                Class.forName("org.springframework.orm.jpa.EntityManagerFactoryUtils");
+//                return Profiles.JPA;
+//            } catch (ClassNotFoundException e2) {
+//                try {
+//                    Class.forName("org.springframework.jdbc.core.JdbcTemplate");
+//                    return Profiles.JDBC;
+//                } catch (ClassNotFoundException e3) {
+//                    throw new IllegalStateException("Could not find DB driver");
+//                }
+//            }
+//        }
+//    }
 }

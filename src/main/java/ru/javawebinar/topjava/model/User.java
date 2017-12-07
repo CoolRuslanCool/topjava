@@ -7,9 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
@@ -18,6 +16,7 @@ import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
         @NamedQuery(name = User.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
         @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email"),
 })
+@NamedEntityGraph(name = "meals", attributeNodes = @NamedAttributeNode(value = "meals"))
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
 public class User extends AbstractNamedEntity {
@@ -54,6 +53,9 @@ public class User extends AbstractNamedEntity {
     @Column(name = "calories_per_day", columnDefinition = "int default 2000")
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Collection<Meal> meals;
 
     public User() {
     }
@@ -117,6 +119,14 @@ public class User extends AbstractNamedEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public Collection<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(Collection<Meal> meals) {
+        this.meals = meals;
     }
 
     @Override
