@@ -7,8 +7,13 @@
 
     <bean class="ru.javawebinar.topjava.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
+    <!--<bean class="ru.javawebinar.topjava.web.meal.MealRestController.LocalDateTimeConversionService" id="conversionService" />-->
     <mvc:annotation-driven>
         <mvc:message-converters>
+            <bean class="org.springframework.format.support.DefaultFormattingConversionService">
+                <constructor-arg ref="conversionService"/>
+            </bean>
+
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper" ref="objectMapper"/>
             </bean>
