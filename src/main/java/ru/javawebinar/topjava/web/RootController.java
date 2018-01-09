@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
-import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,8 +39,8 @@ public class RootController {
 
     @GetMapping("/meals")
     public String meals(Model model) {
-        model.addAttribute("meals",
-                MealsUtil.getWithExceeded(mealService.getAll(AuthorizedUser.id()), AuthorizedUser.getCaloriesPerDay()));
+//        model.addAttribute("meals",
+//                MealsUtil.getWithExceeded(mealService.getAll(AuthorizedUser.id()), AuthorizedUser.getCaloriesPerDay()));
         return "meals";
     }
 }
