@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -25,13 +26,13 @@ public abstract class AbstractMealController {
 
     public Meal get(int id) {
         int userId = AuthorizedUser.id();
-        log.info("get meal {} for user {}", id, userId);
+        log.info("get mealTo {} for user {}", id, userId);
         return service.get(id, userId);
     }
 
     public void delete(int id) {
         int userId = AuthorizedUser.id();
-        log.info("delete meal {} for user {}", id, userId);
+        log.info("delete mealTo {} for user {}", id, userId);
         service.delete(id, userId);
     }
 
@@ -41,18 +42,18 @@ public abstract class AbstractMealController {
         return MealsUtil.getWithExceeded(service.getAll(userId), AuthorizedUser.getCaloriesPerDay());
     }
 
-    public Meal create(Meal meal) {
+    public MealTo create(MealTo mealTo) {
         int userId = AuthorizedUser.id();
-        checkNew(meal);
-        log.info("create {} for user {}", meal, userId);
-        return service.create(meal, userId);
+        checkNew(mealTo);
+        log.info("create {} for user {}", mealTo, userId);
+        return service.create(mealTo, userId);
     }
 
-    public void update(Meal meal, int id) {
+    public void update(MealTo mealTo, int id) {
         int userId = AuthorizedUser.id();
-        assureIdConsistent(meal, id);
-        log.info("update {} for user {}", meal, userId);
-        service.update(meal, userId);
+        assureIdConsistent(mealTo, id);
+        log.info("update {} for user {}", mealTo, userId);
+        service.update(mealTo, userId);
     }
 
     /**
