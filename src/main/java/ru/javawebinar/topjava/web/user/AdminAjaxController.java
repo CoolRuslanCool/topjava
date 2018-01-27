@@ -1,21 +1,22 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
-import ru.javawebinar.topjava.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @RestController
 @RequestMapping("/ajax/admin/users")
 public class AdminAjaxController extends AbstractUserController {
+    private static final Logger log = getLogger(AdminAjaxController.class);
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,26 +32,24 @@ public class AdminAjaxController extends AbstractUserController {
 
     @Override
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
     }
 
     @PostMapping
-    public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result) {
-        if (result.hasErrors()) {
-            // TODO change to exception handler
-            return ValidationUtil.getErrorResponse(result);
-        }
-        if (userTo.isNew()) {
-            super.create(UserUtil.createNewFromTo(userTo));
-        } else {
-            super.update(userTo, userTo.getId());
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public void createOrUpdate(@Valid UserTo userTo) {
+            if (userTo.isNew()) {
+                super.create(UserUtil.createNewFromTo(userTo));
+            } else {
+                super.update(userTo, userTo.getId());
+            }
     }
 
     @Override
     @PostMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void enable(@PathVariable("id") int id, @RequestParam("enabled") boolean enabled) {
         super.enable(id, enabled);
     }

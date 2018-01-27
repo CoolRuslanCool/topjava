@@ -59,7 +59,7 @@ public class ValidationUtil {
     }
 
     public static ResponseEntity<String> getErrorResponse(BindingResult result) {
-        StringJoiner joiner = new StringJoiner("<br>");
+        StringJoiner joiner = new StringJoiner("");
         result.getFieldErrors().forEach(
                 fe -> {
                     String msg = fe.getDefaultMessage();
