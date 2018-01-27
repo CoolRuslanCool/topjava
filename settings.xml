@@ -6,5 +6,6 @@
 
     <activeProfiles>
         <activeProfile>heroku</activeProfile>
+        <activeProfile>postgres</activeProfile>
     </activeProfiles>
 </settings>
